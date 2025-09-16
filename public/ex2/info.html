@@ -21,10 +21,45 @@
         </div>
         <div id="result">
 
+
         </div>
         <script>
-            function getData() {
- 
+            async function getData() {
+                try {
+                    await axios.get("/data", 
+                    {"params": {
+                        "type": document.getElementById("type").value,
+                        "limit": document.getElementById("limit").value
+                    }}
+                    ) 
+                    generateTable(response.data);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+
+            function generateTable(dataObj) {
+                const resultDivElem = document.getElementById("result");
+                while (resultDivElem.firstChild) {
+                    resultDivElem.firstChild.remove();
+                }
+                const h2Elem = document.createElement("h2");
+                h2Elem.innerText = dataObj["type"];
+                resultDivElem.appendChild(h2Elem);
+                let tableElem = document.createElement("table");
+                tableElem.className = "table";
+                const tBodyElem = document.createElement("tbody");
+                let trElem = document.createElement("tr");
+                const tblHeadingLabels = Object.keys(dataObj["records"]);
+                for (let headingLabel of tblHeadingLabels) {
+                    let thElem = document.createElement("th");
+                    thElem.innerText = headingLabel;
+                    trElem.appendChild(thElem);
+                }
+                tBodyElem.appendChild(trElem);
+                tableElem.appendChild(tBodyElem);
+
             }
 
         </script>
